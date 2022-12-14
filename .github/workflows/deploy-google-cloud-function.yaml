@@ -33,18 +33,18 @@ jobs:
         --timeout=60s
         --trigger-http
 
-    - name: Retrieve version
-      id: 'get-url'
+    - id: 'get-url'
+      name: Retrieve version
       run: |
         URL=$(gcloud functions describe line-bot-using-api --gen2 --region=us-central1 --format="value(serviceConfig.uri)")
         echo "URL=$URL" >> $GITHUB_ENV
 
-
     - id: 'test'
+      name: 'test'
       run: "curl -X POST \
             -H 'Authorization: Bearer ${{ secrets.CHANNEL_ACCESS_TOKEN }} ' \
             -H 'Content-Type:application/json' \
-            -d '{"endpoint":""${{ steps.get-url.outputs.URL }}"}' \
+            -d '{\"endpoint\":\"\"${{ steps.get-url.outputs.URL }}\"}' \
             https://api.line.me/v2/bot/channel/webhook/test"
 
 
