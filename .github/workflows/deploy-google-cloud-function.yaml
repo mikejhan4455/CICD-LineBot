@@ -54,6 +54,9 @@ jobs:
             -d '{"endpoint":"${{ env.URL }}"}' \
             https://api.line.me/v2/bot/channel/webhook/test
 
+    - name: Install Python dependencies
+      run: python -m pip install --upgrade pip requests python-dotenv-yaml
+
     - id: 'line-notify'
       name: '傳送 Line 訊息'
       run: python send-text.py
