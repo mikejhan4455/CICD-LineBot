@@ -23,6 +23,7 @@ jobs:
         echo "CHANNEL_ACCESS_TOKEN: ${{ secrets.CHANNEL_ACCESS_TOKEN }}" >> .env.yaml
         echo "CHANNEL_SECRET: ${{ secrets.CHANNEL_SECRET }}" >> .env.yaml
         echo "CHANNEL_ID: ${{ secrets.CHANNEL_ID }}" >> .env.yaml
+        echo "PERSONAL_USERID: ${{ secrets.PERSONAL_USERID }}" >> .env.yaml
 
     - id: 'deploy-using-api'
       name: 部署到 Google Cloud Functions
