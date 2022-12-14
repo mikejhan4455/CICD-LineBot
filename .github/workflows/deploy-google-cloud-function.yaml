@@ -17,17 +17,21 @@ jobs:
         workload_identity_provider: 'projects/871023067494/locations/global/workloadIdentityPools/gcf-deploy-pool/providers/gcf-deploy-provider'
         service_account: 'gcf-deploy@persistent-370411.iam.gserviceaccount.com'
 
-    - id: 'deploy'
-      uses: 'google-github-actions/deploy-cloud-functions@v1'
-      with:
-        name: 'linebot-by-github-action'
-        runtime: 'python310'
-        entry_point: 'callback'
-        env_vars_file: '.env'
 
-
-    # Example of using the output
-    - id: 'test'
-      run: 'curl "${{ steps.deploy.outputs.url }}"'
+    - name: 部署到 Google Cloud Functions
+    - id: 'deploy-using-api'
+      run: >-
+        gcloud functions deploy "line-bot-using-api"
+        --allow-unauthenticated
+        --entry-point=callback
+        --env-vars-file=.env
+        --gen2
+        --max-instances=1
+        --memory=128Mi
+        --no-user-output-enabled
+        --region=us-central1
+        --runtime=pyhton310
+        --timeout=60s
+        --trigger-http
 
 
