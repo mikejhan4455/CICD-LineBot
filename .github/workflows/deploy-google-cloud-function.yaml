@@ -51,7 +51,7 @@ jobs:
       run: "curl -X POST \
             -H 'Authorization: Bearer ${{ secrets.CHANNEL_ACCESS_TOKEN }} ' \
             -H 'Content-Type:application/json' \
-            -d '{\"endpoint\":\"\"${{ steps.get-url.outputs.URL }}\"}' \
+            -d '{\"endpoint\":\"${{ # env.URL }}\"}' \
             https://api.line.me/v2/bot/channel/webhook/test"
 
 
