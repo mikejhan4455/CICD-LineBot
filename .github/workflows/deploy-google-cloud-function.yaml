@@ -58,6 +58,7 @@ jobs:
       name: '傳送訊息'
 
       run: | 
+      python send-text.py
         
 
 

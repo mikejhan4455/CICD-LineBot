@@ -11,12 +11,8 @@ headers = {
     "Content-Type": "application/json",
 }
 body = {
-    "to": os.getenv("CHANNEL_ID"),
-    "messages": [
-        {
-            "type": "Github Action Finished",
-        }
-    ],
+    "to": os.getenv("PERSONAL_USERID"),
+    "messages": [{"type": "text", "text": "Github Action Finished"}],
 }
 # 向指定網址發送 request
 req = requests.request(
