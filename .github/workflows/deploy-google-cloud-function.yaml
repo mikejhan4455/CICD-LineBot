@@ -20,10 +20,9 @@ jobs:
     - name: 建立 GCF 環境變數檔案
       shell: bash
       run: |
-        [[ -z "$CHANNEL_ACCESS_TOKEN" ]] || echo "$CHANNEL_ACCESS_TOKEN" > .env.yaml
-        [[ -z "$CHANNEL_SECRET" ]] || echo "$CHANNEL_SECRET" > .env.yaml
-        [[ -z "$CHANNEL_ID" ]] || echo "$CHANNEL_ID" > .env.yaml
-        echo "GITHUB_SHA: ${GITHUB_SHA}" >> .env.yaml
+        echo "CHANNEL_ACCESS_TOKEN: ${{ secrets.CHANNEL_ACCESS_TOKEN }}" >> .env.yaml
+        echo "CHANNEL_SECRET: ${{ secrets.CHANNEL_SECRET }}" >> .env.yaml
+        echo "CHANNEL_ID: ${{ secrets.CHANNEL_ID }}" >> .env.yaml
 
     - id: 'deploy-using-api'
       name: 部署到 Google Cloud Functions
