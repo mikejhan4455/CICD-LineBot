@@ -17,6 +17,13 @@ jobs:
         workload_identity_provider: 'projects/871023067494/locations/global/workloadIdentityPools/gcf-deploy-pool/providers/gcf-deploy-provider'
         service_account: 'gcf-deploy@persistent-370411.iam.gserviceaccount.com'
 
+    - name: 建立 GCF 環境變數檔案
+      shell: bash
+      run: |
+        [[ -z "$CHANNEL_ACCESS_TOKEN" ]] || echo "$CHANNEL_ACCESS_TOKEN" > .env.yaml
+        [[ -z "$CHANNEL_SECRET" ]] || echo "$CHANNEL_SECRET" > .env.yaml
+        [[ -z "$CHANNEL_ID" ]] || echo "$CHANNEL_ID" > .env.yaml
+        echo "GITHUB_SHA: ${GITHUB_SHA}" >> .env.yaml
 
     - id: 'deploy-using-api'
       name: 部署到 Google Cloud Functions
@@ -34,19 +41,18 @@ jobs:
         --trigger-http
 
     - id: 'get-url'
-      name: Retrieve version
+      name: Get Cloud Function Url
       run: |
         URL=$(gcloud functions describe line-bot-using-api --gen2 --region=us-central1 --format="value(serviceConfig.uri)")
         echo "URL=$URL" >> $GITHUB_ENV
 
     - id: 'test'
-      name: 'test'
+      name: Test Deployment
       run: "curl -X POST \
             -H 'Authorization: Bearer ${{ secrets.CHANNEL_ACCESS_TOKEN }} ' \
             -H 'Content-Type:application/json' \
             -d '{\"endpoint\":\"\"${{ steps.get-url.outputs.URL }}\"}' \
             https://api.line.me/v2/bot/channel/webhook/test"
-
 
 
 
