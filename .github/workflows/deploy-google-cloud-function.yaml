@@ -54,5 +54,12 @@ jobs:
             -d '{"endpoint":"${{ env.URL }}"}' \
             https://api.line.me/v2/bot/channel/webhook/test
 
+    - id: 'line-notify'
+      name: '傳送訊息'
+
+      run: | 
+        
+
+
 
 

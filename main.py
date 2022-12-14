@@ -47,7 +47,7 @@ def callback(request):
 
     # get X-Line-Signature header value
     signature_from_requests = request.headers["X-Line-Signature"]
-    print(signature_from_requests)
+    print(request.json)
 
     #  # Compare x-line-signature request header and the signature
     # body = request.json
