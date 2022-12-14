@@ -48,11 +48,12 @@ jobs:
 
     - id: 'test'
       name: Test Deployment
-      run: "curl -X POST \
-            -H 'Authorization: Bearer ${{ secrets.CHANNEL_ACCESS_TOKEN }} ' \
+      run:  |
+            curl -X POST \
+            -H 'Authorization: Bearer ${{ secrets.CHANNEL_ACCESS_TOKEN }}' \
             -H 'Content-Type:application/json' \
-            -d '{\"endpoint\":\"${{ env.URL }}\"}' \
-            https://api.line.me/v2/bot/channel/webhook/test"
+            -d '{"endpoint":"${{ env.URL }}"}' \
+            https://api.line.me/v2/bot/channel/webhook/test
 
 
 
