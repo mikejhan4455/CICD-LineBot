@@ -38,8 +38,6 @@ jobs:
       run: |
         echo "URL=$(gcloud functions describe line-bot-using-api --gen2 --region=us-central1 --format="value(serviceConfig.uri)")"
 
-
-    # Example of using the output
     - id: 'test'
       run: "curl -X POST \
             -H 'Authorization: Bearer ${{ secrets.CHANNEL_ACCESS_TOKEN }} ' \
