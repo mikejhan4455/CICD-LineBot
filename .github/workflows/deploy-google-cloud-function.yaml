@@ -15,14 +15,13 @@ jobs:
       uses: 'google-github-actions/auth@v1'
       with:
         workload_identity_provider: 'projects/871023067494/locations/global/workloadIdentityPools/gcf-deploy-pool/providers/gcf-deploy-provider'
-
         service_account: 'gcf-deploy@persistent-370411.iam.gserviceaccount.com'
 
     - id: 'deploy'
       uses: 'google-github-actions/deploy-cloud-functions@v1'
       with:
         name: 'linebot'
-        runtime: 'pyhton310'
+        runtime: 'python310'
         entry_point: 'callback'
         env_vars_file: '.env'
 
