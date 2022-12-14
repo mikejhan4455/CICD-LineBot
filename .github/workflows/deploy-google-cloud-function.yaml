@@ -18,8 +18,8 @@ jobs:
         service_account: 'gcf-deploy@persistent-370411.iam.gserviceaccount.com'
 
 
-    - name: 部署到 Google Cloud Functions
     - id: 'deploy-using-api'
+      name: 部署到 Google Cloud Functions
       run: >-
         gcloud functions deploy "line-bot-using-api"
         --allow-unauthenticated
