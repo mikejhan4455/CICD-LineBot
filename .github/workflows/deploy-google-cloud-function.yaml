@@ -29,8 +29,10 @@ jobs:
         --memory=128Mi
         --no-user-output-enabled
         --region=us-central1
-        --runtime=pyhton310
+        --runtime=python310
         --timeout=60s
         --trigger-http
 
-
+    # Example of using the output
+    - id: 'test'
+      run: 'curl "${{ steps.deploy.outputs.url }}"'
