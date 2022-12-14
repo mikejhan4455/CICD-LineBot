@@ -36,7 +36,8 @@ jobs:
     - name: Retrieve version
       id: 'get-url'
       run: |
-        echo "URL=$(gcloud functions describe line-bot-using-api --gen2 --region=us-central1 --format="value(serviceConfig.uri)")"
+        URL=$(gcloud functions describe line-bot-using-api --gen2 --region=us-central1 --format="value(serviceConfig.uri)")
+        echo "URL=$URL" >> $GITHUB_ENV
 
     - id: 'test'
       run: "curl -X POST \
