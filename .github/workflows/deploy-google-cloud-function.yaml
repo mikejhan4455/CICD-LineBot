@@ -24,7 +24,6 @@ jobs:
         gcloud functions deploy "line-bot-using-api"
         --allow-unauthenticated
         --entry-point=callback
-        --env-vars-file=.env.yaml
         --gen2
         --max-instances=1
         --memory=128Mi
