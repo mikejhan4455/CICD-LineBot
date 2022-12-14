@@ -20,7 +20,7 @@ jobs:
     - id: 'deploy'
       uses: 'google-github-actions/deploy-cloud-functions@v1'
       with:
-        name: 'linebot'
+        name: 'linebot-by-github-action'
         runtime: 'python310'
         entry_point: 'callback'
         env_vars_file: '.env'
