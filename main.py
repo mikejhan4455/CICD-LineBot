@@ -49,12 +49,12 @@ def callback(request):
     signature_from_requests = request.headers["X-Line-Signature"]
     print(signature_from_requests)
 
+    #  # Compare x-line-signature request header and the signature
     # body = request.json
     # hash_value = hmac.new(
     #     channel_secret.encode("utf-8"), body.encode("utf-8"), hashlib.sha256
     # ).digest()
     # signature_from_requests = base64.b64encode(hash_value)
-    # # Compare x-line-signature request header and the signature
     # print("signature_from_requests: {}".format(signature_from_requests))
     # print("signature_from_hash: {}".format(hash_value))
 
@@ -78,5 +78,5 @@ def callback(request):
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
     line_bot_api.reply_message(
-        event.reply_token, TextSendMessage(text=event.message.text)
+        event.reply_token, TextSendMessage(text=event.message.text + 'version 2')
     )

@@ -1,0 +1,35 @@
+name: Cloud Functions Deploy
+on: [push]
+
+jobs:
+  job_id:
+    runs-on: 'ubuntu-latest'
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - uses: 'actions/checkout@v3'
+
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        workload_identity_provider: 'iam.googleapis.com/projects/871023067494/locations/global/workloadIdentityPools/gcf-deploy-pools'
+        service_account: 'gcf-deploy@persistent-370411.iam.gserviceaccount.com'
+
+    - id: 'deploy'
+      uses: 'google-github-actions/deploy-cloud-functions@v1'
+      with:
+        name: 'linebot'
+        runtime: 'pyhton310'
+        entry_point: 'callback'
+        env_vars_file: '.env'
+
+
+    # Example of using the output
+    - id: 'test'
+      run: 'curl "${{ steps.deploy.outputs.url }}"'
+
+    - 
+
+
