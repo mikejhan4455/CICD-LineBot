@@ -12,7 +12,26 @@ headers = {
 }
 body = {
     "to": os.getenv("PERSONAL_USERID"),
-    "messages": [{"type": "text", "text": "Github Action Finished"}],
+    "messages": [
+        {
+            "type": "text",
+            "text": "Github Action Finished, job {} -> result: {}".format(
+                "deploy-using-api", needs.deploy - using - api.result
+            ),
+        },
+        {
+            "type": "text",
+            "text": "Github Action Finished, job {} -> result: {}".format(
+                "get-url", needs.get - url.result
+            ),
+        },
+        {
+            "type": "text",
+            "text": "Github Action Finished, job {} -> result: {}".format(
+                "test", needs.test.result
+            ),
+        },
+    ],
 }
 # 向指定網址發送 request
 req = requests.request(
