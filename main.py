@@ -16,6 +16,7 @@ import dotenv
 import base64
 import hashlib
 import hmac
+from datetime import datetime
 
 
 dotenv.load_dotenv(".env.yaml")
@@ -77,6 +78,28 @@ def callback(request):
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    line_bot_api.reply_message(
-        event.reply_token, TextSendMessage(text=event.message.text)
-    )
+
+    # Add simple business logics
+    INSTRUCTION = ["早安", "記住", "還原"]
+    remember_words = []
+    reply_text = ""
+
+    if INSTRUCTION[0] in event.message.text:
+        reply_text = datetime.today().strftime("%Y-%m-%d")
+
+    elif INSTRUCTION[1] in event.message.text:
+        remember_words.append(event.message.text.split(" ")[-1])
+        reply_text = "我已記住：{}".format(remember_words[-1])
+
+    elif INSTRUCTION[3] in event.message.text:
+        if len(remember_words):
+            text = remember_words.pop()
+            reply_text = "你要我記住: {}".format(text)
+
+        else:
+            reply_text = "沒有記住任何東西"
+
+    else:
+        reply_text = event.message.text
+
+    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_text))
