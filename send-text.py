@@ -16,7 +16,7 @@ body = {
         {
             "type": "text",
             "text": "Github Action Finished, test result ->  {}".format(
-                os.getenv("TEST_OUTCOME")
+                os.getenv("TEST_STATUS")
             ),
         }
     ],

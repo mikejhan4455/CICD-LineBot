@@ -61,5 +61,5 @@ jobs:
       run: python -m pip install --upgrade pip requests python-dotenv-yaml
 
     - id: 'line-notify'
-      name: '傳送 Line 訊息'
-      run: echo "TEST_OUTCOME=${{ steps.test.outcome }}" >> $GITHUB_ENV && python send-text.py
+      name: 'Send Line Notify'
+      run: echo "TEST_STATUS=${{ steps.deploy-using-api.status }}" >> $GITHUB_ENV && python send-text.py
