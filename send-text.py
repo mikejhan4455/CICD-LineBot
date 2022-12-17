@@ -15,22 +15,10 @@ body = {
     "messages": [
         {
             "type": "text",
-            "text": "Github Action Finished, job {} -> result: {}".format(
-                "deploy-using-api", steps.deploy - using - api.result
+            "text": "Github Action Finished, test result ->  {}".format(
+                os.getenv("TEST_OUTCOME")
             ),
-        },
-        {
-            "type": "text",
-            "text": "Github Action Finished, job {} -> result: {}".format(
-                "get-url", steps.get - url.result
-            ),
-        },
-        {
-            "type": "text",
-            "text": "Github Action Finished, job {} -> result: {}".format(
-                "test", steps.test.result
-            ),
-        },
+        }
     ],
 }
 # 向指定網址發送 request
