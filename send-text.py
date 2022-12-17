@@ -16,19 +16,19 @@ body = {
         {
             "type": "text",
             "text": "Github Action Finished, job {} -> result: {}".format(
-                "deploy-using-api", needs.deploy - using - api.result
+                "deploy-using-api", steps.deploy - using - api.result
             ),
         },
         {
             "type": "text",
             "text": "Github Action Finished, job {} -> result: {}".format(
-                "get-url", needs.get - url.result
+                "get-url", steps.get - url.result
             ),
         },
         {
             "type": "text",
             "text": "Github Action Finished, job {} -> result: {}".format(
-                "test", needs.test.result
+                "test", steps.test.result
             ),
         },
     ],
