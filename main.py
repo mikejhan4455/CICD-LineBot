@@ -91,7 +91,7 @@ def message_text(event):
         remember_words.append(event.message.text.split(" ")[-1])
         reply_text = "我已記住：{}".format(remember_words[-1])
 
-    elif INSTRUCTION[3] in event.message.text:
+    elif INSTRUCTION[2] in event.message.text:
         if len(remember_words):
             text = remember_words.pop()
             reply_text = "你要我記住: {}".format(text)
