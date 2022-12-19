@@ -75,7 +75,6 @@ def message_text(event):
     # Add simple business logics
     INSTRUCTION = ["早安", "記住", "還原"]
 
-    remember_words = []
     reply_text = ""
 
     if message.startswith(INSTRUCTION[0]):
@@ -84,7 +83,7 @@ def message_text(event):
     elif message.startswith(INSTRUCTION[1]):
         word = event.message.text.replace(INSTRUCTION[1], "")
         firebase_handler("write", user_id=user_id, word=word)
-        reply_text = "我已記住：{}".format(remember_words[-1])
+        reply_text = "我已記住：{}".format(word)
 
     elif message.startswith(INSTRUCTION[2]):
         remember_words = firebase_handler("read", user_id)
