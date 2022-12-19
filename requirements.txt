@@ -63,7 +63,6 @@ PyJWT==2.6.0
 pylint==2.15.8
 pyparsing==3.0.9
 pytest==7.2.0
-python-dotenv==0.21.0
 python-dotenv-yaml==0.17.1
 python-firebase @ git+https://github.com/ozgur/python-firebase@0d79d7609844569ea1cec4ac71cb9038e834c355
 python-jwt==4.0.0
