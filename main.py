@@ -118,9 +118,10 @@ def firebase_handler(action, user_id, word=None):
         user_data = firebase_handler("read", user_id)
 
         try:
-            user_data["users"]["words"].append(word)
+            user_data["words"].append(word)
             fb.put(url, name="users", data=user_data)
         except:
+            # No record created yet, create one
             firebase_handler("create", user_id, word)
 
     elif action == "create":
@@ -129,5 +130,5 @@ def firebase_handler(action, user_id, word=None):
 
     elif action == "delete":
         user_data = firebase_handler("read", user_id)
-        user_data["users"]["words"].pop()
+        user_data["words"].pop()
         fb.put(url, name="users", data=user_data)
