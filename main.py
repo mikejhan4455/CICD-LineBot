@@ -81,12 +81,12 @@ def message_text(event):
         reply_text = datetime.today().strftime("%Y-%m-%d")
 
     elif message.startswith(INSTRUCTION[1]):
-        word = event.message.text.replace(INSTRUCTION[1], "")
+        word = event.message.text.replace(INSTRUCTION[1], "").strip()
         firebase_handler("write", user_id=user_id, word=word)
         reply_text = "我已記住：{}".format(word)
 
     elif message.startswith(INSTRUCTION[2]):
-        remember_words = firebase_handler("read", user_id)
+        remember_words = firebase_handler("read", user_id)["words"]
         if remember_words:
             text = remember_words.pop()
             reply_text = "你要我記住: {}".format(text)
@@ -118,7 +118,7 @@ def firebase_handler(action, user_id, word=None):
         user_data = firebase_handler("read", user_id)
 
         try:
-            user_data["users"]["store_words"].append(word)
+            user_data["users"]["words"].append(word)
             fb.put(url, name="users", data=user_data)
         except:
             firebase_handler("create", user_id, word)
@@ -129,5 +129,5 @@ def firebase_handler(action, user_id, word=None):
 
     elif action == "delete":
         user_data = firebase_handler("read", user_id)
-        user_data["users"]["store_words"].pop()
+        user_data["users"]["words"].pop()
         fb.put(url, name="users", data=user_data)
