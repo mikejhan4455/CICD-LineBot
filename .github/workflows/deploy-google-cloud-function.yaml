@@ -24,6 +24,7 @@ jobs:
         echo "CHANNEL_SECRET: ${{ secrets.CHANNEL_SECRET }}" >> .env.yaml
         echo "CHANNEL_ID: ${{ secrets.CHANNEL_ID }}" >> .env.yaml
         echo "PERSONAL_USERID: ${{ secrets.PERSONAL_USERID }}" >> .env.yaml
+        echo "FIREBASE_URL: ${{ secrets.FIREBASE_URL }}" >> .env.yaml
 
     - id: deploy-using-api
       name: Deploy to GCF
