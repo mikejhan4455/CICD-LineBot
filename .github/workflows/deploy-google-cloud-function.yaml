@@ -63,4 +63,4 @@ jobs:
 
     - id: 'line-notify'
       name: 'Send Line Notify'
-      run: echo "TEST_STATUS=${{ steps.deploy-using-api.outcome }}" >> $GITHUB_ENV && python send-text.py
+      run: echo "TEST_STATUS=${{ steps.deploy-using-api.status }}" >> $GITHUB_ENV && python send-text.py

@@ -117,11 +117,15 @@ def firebase_handler(action, user_id, word=None):
 
     elif action == "write":
         user_data = firebase_handler("read", user_id)
-        user_data["users"]["store_words"].append(word)
-        fb.put(url, name="users", data=user_data)
+
+        try:
+            user_data["users"]["store_words"].append(word)
+            fb.put(url, name="users", data=user_data)
+        except:
+            firebase_handler("create", user_id, word)
 
     elif action == "create":
-        data = {user_id: {"words": [""]}}
+        data = {user_id: {"words": [word]}}
         fb.put(url, name="users", data=data)
 
     elif action == "delete":
