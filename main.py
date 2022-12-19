@@ -86,13 +86,15 @@ def message_text(event):
         reply_text = "我已記住：{}".format(word)
 
     elif message.startswith(INSTRUCTION[2]):
-        remember_words = firebase_handler("read", user_id)["words"]
-        if remember_words:
+
+        try:
+            remember_words = firebase_handler("read", user_id)["words"]
+
             text = remember_words.pop()
             reply_text = "你要我記住: {}".format(text)
             firebase_handler("delete", user_id)
 
-        else:
+        except KeyError:
             reply_text = "沒有記住任何東西"
 
     else:
