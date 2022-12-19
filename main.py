@@ -94,7 +94,7 @@ def message_text(event):
             reply_text = "你要我記住: {}".format(text)
             firebase_handler("delete", user_id)
 
-        except KeyError:
+        except:
             reply_text = "沒有記住任何東西"
 
     else:
