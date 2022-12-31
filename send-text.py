@@ -5,22 +5,24 @@ import dotenv
 from argparse import ArgumentParser
 
 
+# laod environment variabels
 dotenv.load_dotenv(".env.yaml")
 
+# add argument parser
+parser: ArgumentParser = ArgumentParser()
+parser.add_argument("text", help="Text to send", type=str, default="")
+
+args = parser.parse_args()
+
+
+# main logic of sending message
 headers = {
     "Authorization": "Bearer {}".format(os.getenv("CHANNEL_ACCESS_TOKEN")),
     "Content-Type": "application/json",
 }
 body = {
     "to": os.getenv("PERSONAL_USERID"),
-    "messages": [
-        {
-            "type": "text",
-            "text": "Github Action Finished, test result ->  {}".format(
-                os.getenv("TEST_STATUS")
-            ),
-        }
-    ],
+    "messages": [{"type": "text", "text": args.text}],
 }
 # 向指定網址發送 request
 req = requests.request(
