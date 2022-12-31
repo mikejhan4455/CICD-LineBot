@@ -27,12 +27,14 @@ def callback(request):
     # get channel_secret and channel_access_token from your environment variable
     channel_secret = os.getenv("CHANNEL_SECRET", None)
     channel_access_token = os.getenv("CHANNEL_ACCESS_TOKEN", None)
+
     if channel_secret is None:
         print("Specify LINE_CHANNEL_SECRET as environment variable.")
-        sys.exit(1)
+        raise Exception
+
     if channel_access_token is None:
         print("Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.")
-        sys.exit(1)
+        raise Exception
 
     # get X-Line-Signature header value
     signature_from_requests = request.headers["X-Line-Signature"]
@@ -94,7 +96,7 @@ def message_text(event):
             reply_text = "你要我記住: {}".format(text)
             firebase_handler("delete", user_id)
 
-        except:
+        except Exception:
             reply_text = "沒有記住任何東西"
 
     else:
@@ -107,30 +109,37 @@ def firebase_handler(action, user_id, word=None):
     # TODO: Add Auth step
 
     if action not in ["read", "write", "create", "delete"]:
-        raise Exception()
+        raise Exception
 
-    url = os.getenv("FIREBASE_URL")
-    fb = firebase.FirebaseApplication(url, None)
+    firebase_url = os.getenv("FIREBASE_URL")
+
+    # Exceptoin handler
+    if firebase_url is None:
+        print("Specify FIREBASE_URL as environment variable.")
+        raise Exception
+
+    fb = firebase.FirebaseApplication(firebase_url, None)
 
     if action == "read":
-        data = fb.get(url + "users/" + user_id, None)
+        data = fb.get(firebase_url + "users/" + user_id, None)
         return data
 
-    elif action == "write":
+    if action == "write":
         user_data = firebase_handler("read", user_id)
 
         try:
             user_data["words"].append(word)
-            fb.put(url, name="users", data=user_data)
-        except:
+            fb.put(firebase_url, name="users", data=user_data)
+        except Exception:
             # No record created yet, create one
             firebase_handler("create", user_id, word)
 
-    elif action == "create":
+    if action == "create":
+        # Creating a record must give some data
         data = {user_id: {"words": [word]}}
-        fb.put(url, name="users", data=data)
+        fb.put(firebase_url, name="users", data=data)
 
-    elif action == "delete":
+    if action == "delete":
         user_data = firebase_handler("read", user_id)
         user_data["words"].pop()
-        fb.put(url, name="users", data=user_data)
+        fb.put(firebase_url, name="users", data=user_data)
