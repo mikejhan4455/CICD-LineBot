@@ -75,6 +75,6 @@ def message_text(event):
 
     reply_messages = message_reply_handler(event)
 
-    for message in reply_messages:
-
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=message))
+    line_bot_api.reply_message(
+        event.reply_token, [TextSendMessage(text=message) for message in reply_messages]
+    )
