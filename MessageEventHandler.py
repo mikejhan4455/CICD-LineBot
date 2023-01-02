@@ -43,6 +43,7 @@ class MessageEventHandler:
     def list_data(self, user_id: str):
         reply_message = []
         data = self.firebase_handler.read(user_id)
+        print(data)
 
         reply_message.append(
             "".join(

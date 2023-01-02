@@ -36,13 +36,13 @@ class FirebaseHandler:
         else:
             # User record exist, append data
             user_data["data"].append(data)
-            self.fb.put(self.firebase_url, name="users", data=user_data)
+            self.fb.put(self.firebase_url + "users/", name=user_id, data=user_data)
 
     def create(self, user_id, data):
 
         # Creating a record must provide some data
         data = {user_id: {"data": [data]}}
-        self.fb.put(self.firebase_url, name="users", data=data)
+        self.fb.put(self.firebase_url + "users/", name=user_id, data=data)
 
     def delete(self, user_id, data):
         user_data = self.read(user_id)
