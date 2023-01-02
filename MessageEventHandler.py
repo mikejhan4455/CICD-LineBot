@@ -43,13 +43,16 @@ class MessageEventHandler:
     def list_data(self, user_id: str):
         reply_message = []
         data = self.firebase_handler.read(user_id)
-        print(data)
 
-        reply_message.append(
-            "".join(
-                ["{}. {}\n".format(i, d) for i, d in enumerate(data["data"])]
-            ).strip()
-        )
+        if not data:
+            reply_message.append("目前沒有資料噢")
+
+        else:
+            reply_message.append(
+                "清單：\n".join(
+                    ["{}. {}\n".format(i, d) for i, d in enumerate(data["data"])]
+                ).strip()
+            )
 
         return reply_message
 
@@ -58,15 +61,15 @@ class MessageEventHandler:
         reply_message = []
 
         # remove keyword
-        insensitive_delete = re.compile(re.escape('delete'), re.IGNORECASE)
-        message = insensitive_delete.sub('', message).strip()
+        insensitive_delete = re.compile(re.escape("delete"), re.IGNORECASE)
+        message = insensitive_delete.sub("", message).strip()
 
         # remove by index or text
         if message.isdigit():
             # remove by index
             index = int(message)
-            data = self.firebase_handler.read(user_id)["data"][index]
-            result = self.firebase_handler.delete(user_id, data)
+            message = self.firebase_handler.read(user_id)["data"][index]
+            result = self.firebase_handler.delete(user_id, message)
 
         else:
             # remove by text
