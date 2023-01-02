@@ -41,7 +41,7 @@ class FirebaseHandler:
     def create(self, user_id, data):
 
         # Creating a record must provide some data
-        data = {user_id: {"data": [data]}}
+        data = {"data": [data]}
         self.fb.put(self.firebase_url + "users/", name=user_id, data=data)
 
     def delete(self, user_id, data):
