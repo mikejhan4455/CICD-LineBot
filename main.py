@@ -13,11 +13,13 @@ from flask import abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from MessageEventHandler import MessageEventHandler
 
 # Define global env and objects
 dotenv.load_dotenv(".env.yaml")
 line_bot_api = LineBotApi(os.getenv("CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.getenv("CHANNEL_SECRET"))
+message_reply_handler = MessageEventHandler()
 
 
 @functions_framework.http
@@ -71,75 +73,6 @@ def callback(request):
 def message_text(event):
     """Handle All TextMessage from requesets of LINE."""
 
-    user_id = event.source.user_id
-    message = event.message.text
-
-    # Add simple business logics
-    INSTRUCTION = ["早安", "記住", "還原"]
-
-    reply_text = ""
-
-    if message.startswith(INSTRUCTION[0]):
-        reply_text = datetime.today().strftime("%Y-%m-%d")
-
-    elif message.startswith(INSTRUCTION[1]):
-        word = event.message.text.replace(INSTRUCTION[1], "").strip()
-        firebase_handler("write", user_id=user_id, word=word)
-        reply_text = "我已記住：{}".format(word)
-
-    elif message.startswith(INSTRUCTION[2]):
-
-        try:
-            remember_words = firebase_handler("read", user_id)["words"]
-
-            text = remember_words.pop()
-            reply_text = "你要我記住: {}".format(text)
-            firebase_handler("delete", user_id)
-
-        except Exception:
-            reply_text = "沒有記住任何東西"
-
-    else:
-        reply_text = message
+    reply_text = message_reply_handler(event)
 
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_text))
-
-
-def firebase_handler(action, user_id, word=None):
-    # TODO: Add Auth step
-
-    if action not in ["read", "write", "create", "delete"]:
-        raise Exception
-
-    firebase_url = os.getenv("FIREBASE_URL")
-
-    # Exceptoin handler
-    if firebase_url is None:
-        print("Specify FIREBASE_URL as environment variable.")
-        raise Exception
-
-    fb = firebase.FirebaseApplication(firebase_url, None)
-
-    if action == "read":
-        data = fb.get(firebase_url + "users/" + user_id, None)
-        return data
-
-    if action == "write":
-        user_data = firebase_handler("read", user_id)
-
-        try:
-            user_data["words"].append(word)
-            fb.put(firebase_url, name="users", data=user_data)
-        except Exception:
-            # No record created yet, create one
-            firebase_handler("create", user_id, word)
-
-    if action == "create":
-        # Creating a record must give some data
-        data = {user_id: {"words": [word]}}
-        fb.put(firebase_url, name="users", data=data)
-
-    if action == "delete":
-        user_data = firebase_handler("read", user_id)
-        user_data["words"].pop()
-        fb.put(firebase_url, name="users", data=user_data)
