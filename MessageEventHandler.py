@@ -1,3 +1,4 @@
+from curses.ascii import isdigit
 from datetime import datetime, timedelta, timezone
 from FirebaseHandler import FirebaseHandler
 
@@ -39,7 +40,7 @@ class MessageEventHandler:
 
         return reply_text
 
-    def list_data(self, user_id):
+    def list_data(self, user_id: str):
         data = self.firebase_handler.read(user_id)
 
         reply_text = "".join(
@@ -48,9 +49,22 @@ class MessageEventHandler:
 
         return reply_text
 
-    def delete_data(self, user_id, message):
+    def delete_data(self, user_id: str, message: str):
+        # TODO: delete using index
 
-        result = self.firebase_handler.delete(user_id, message)
+        # remove keyword
+        message = message.replace("delete", "").strip()
+
+        # remove by index or text
+        if message.isdigit():
+            # remove by index
+            index = int(message)
+            data = self.firebase_handler.read(user_id)["data"][index]
+            result = self.firebase_handler.delete(user_id, data)
+
+        else:
+            # remove by text
+            result = self.firebase_handler.delete(user_id, message)
 
         if result:
             reply_text = "已經刪除: {}".format(message)
@@ -65,9 +79,15 @@ class MessageEventHandler:
 
         return reply_text
 
-    def remind_data(self, user_id, message):
+    def remind_data(self, user_id: str, message: str):
         # TODO：WIP
 
+        reply_text = ""
+
+        return reply_text
+
+    def search_dat(self, user_id: str, message: str):
+        # TODO: WIP
         reply_text = ""
 
         return reply_text
