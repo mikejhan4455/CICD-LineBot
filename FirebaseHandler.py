@@ -35,7 +35,7 @@ class FirebaseHandler:
 
         else:
             # User record exist, append data
-            user_data["words"].append(data)
+            user_data["data"].append(data)
             self.fb.put(self.firebase_url, name="users", data=user_data)
 
     def create(self, user_id, data):
