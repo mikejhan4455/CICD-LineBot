@@ -22,7 +22,7 @@ class FirebaseHandler:
 
     def read(self, user_id):
 
-        data: dict = self.fb.get(self.firebase_url + "users/" + user_id, None)
+        data: dict | None = self.fb.get(self.firebase_url + "users/" + user_id, None)
         return data
 
     def write(self, user_id, data):

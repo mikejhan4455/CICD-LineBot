@@ -49,7 +49,7 @@ class MessageEventHandler:
 
         else:
             reply_message.append(
-                "清單：\n".join(
+                "清單：\n" + "".join(
                     ["{}. {}\n".format(i, d) for i, d in enumerate(data["data"])]
                 ).strip()
             )
@@ -68,6 +68,7 @@ class MessageEventHandler:
         if message.isdigit():
             # remove by index
             index = int(message)
+            # BUG: Delete index out of range
             message = self.firebase_handler.read(user_id)["data"][index]
             result = self.firebase_handler.delete(user_id, message)
 
