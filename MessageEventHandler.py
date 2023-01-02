@@ -13,16 +13,23 @@ class MessageEventHandler:
 
         # message route
         if message == "date":
-            self.date()
+            return self.date()
 
-        if message.startswith("list"):
-            self.list_data(user_id)
+        elif message.startswith("list"):
 
-        if message.startswith("delete"):
-            self.delete_data(user_id, message)
+            return self.list_data(user_id)
 
-        if message.startswith("remind"):
-            self.remind_data(user_id, message)
+        elif message.startswith("delete"):
+
+            return self.delete_data(user_id, message)
+
+        elif message.startswith("remind"):
+
+            return self.remind_data(user_id, message)
+
+        else:
+            # 其他一律存入 database
+            return self.remember_data(user_id, message)
 
     def date(self):
         dt = datetime.utcnow().replace(tzinfo=timezone.utc)
@@ -49,6 +56,12 @@ class MessageEventHandler:
             reply_text = "已經刪除: {}".format(message)
         else:
             reply_text = "沒有 {} 的記錄".format(message)
+
+        return reply_text
+
+    def remember_data(self, user_id, message):
+        self.firebase_handler.write(user_id, message)
+        reply_text = "已記住 {}".format(message)
 
         return reply_text
 
