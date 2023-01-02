@@ -73,6 +73,8 @@ def callback(request):
 def message_text(event):
     """Handle All TextMessage from requesets of LINE."""
 
-    reply_text = message_reply_handler(event)
+    reply_messages = message_reply_handler(event)
 
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_text))
+    for message in reply_messages:
+
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=message))

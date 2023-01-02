@@ -1,4 +1,3 @@
-from curses.ascii import isdigit
 from datetime import datetime, timedelta, timezone
 from FirebaseHandler import FirebaseHandler
 
@@ -16,41 +15,44 @@ class MessageEventHandler:
         if message == "date":
             return self.date()
 
-        elif message.startswith("list"):
+        if message.startswith("list"):
 
             return self.list_data(user_id)
 
-        elif message.startswith("delete"):
+        if message.startswith("delete"):
 
             return self.delete_data(user_id, message)
 
-        elif message.startswith("remind"):
+        if message.startswith("remind"):
 
             return self.remind_data(user_id, message)
 
-        else:
-            # 其他一律存入 database
-            return self.remember_data(user_id, message)
+        # 其他一律存入 database
+        return self.remember_data(user_id, message)
 
     def date(self):
+        reply_message = []
         dt = datetime.utcnow().replace(tzinfo=timezone.utc)
         dt.astimezone(timezone(timedelta(hours=8)))  # 轉換時區 -> 東八區
 
-        reply_text = dt.today().strftime("%Y-%m-%d")
+        reply_message.append(dt.today().strftime("%Y-%m-%d"))
 
-        return reply_text
+        return reply_message
 
     def list_data(self, user_id: str):
+        reply_message = []
         data = self.firebase_handler.read(user_id)
 
-        reply_text = "".join(
-            ["{}. {}\n".format(i, d) for i, d in enumerate(data["data"])]
+        reply_message.append(
+            "".join(["{}. {}\n".format(i, d) for i, d in enumerate(data["data"])])
         )
 
-        return reply_text
+        return reply_message
 
     def delete_data(self, user_id: str, message: str):
         # TODO: delete using index
+
+        reply_message = []
 
         # remove keyword
         message = message.replace("delete", "").strip()
@@ -67,27 +69,35 @@ class MessageEventHandler:
             result = self.firebase_handler.delete(user_id, message)
 
         if result:
-            reply_text = "已經刪除: {}".format(message)
+            reply_message.append("已經刪除: {}".format(message))
         else:
-            reply_text = "沒有 {} 的記錄".format(message)
+            reply_message.append("沒有 {} 的記錄".format(message))
 
-        return reply_text
+        reply_message.extend(self.list_data(user_id))
+
+        return reply_message
 
     def remember_data(self, user_id, message):
+        reply_message = []
         self.firebase_handler.write(user_id, message)
-        reply_text = "已記住 {}".format(message)
 
-        return reply_text
+        # reply success
+        reply_message.append("已記住 {}".format(message))
+
+        # reply current database
+        reply_message.extend(self.list_data(user_id))
+
+        return reply_message
 
     def remind_data(self, user_id: str, message: str):
         # TODO：WIP
 
-        reply_text = ""
+        reply_message = []
 
-        return reply_text
+        return reply_message
 
     def search_dat(self, user_id: str, message: str):
         # TODO: WIP
-        reply_text = ""
+        reply_message = []
 
-        return reply_text
+        return reply_message
