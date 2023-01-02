@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+import re
 from FirebaseHandler import FirebaseHandler
 
 
@@ -15,15 +16,15 @@ class MessageEventHandler:
         if message == "date":
             return self.date()
 
-        if message.startswith("list"):
+        if re.match("list", message, re.IGNORECASE):
 
             return self.list_data(user_id)
 
-        if message.startswith("delete"):
+        if re.match("delete", message, re.IGNORECASE):
 
             return self.delete_data(user_id, message)
 
-        if message.startswith("remind"):
+        if re.match("remind", message, re.IGNORECASE):
 
             return self.remind_data(user_id, message)
 
@@ -44,18 +45,20 @@ class MessageEventHandler:
         data = self.firebase_handler.read(user_id)
 
         reply_message.append(
-            "".join(["{}. {}\n".format(i, d) for i, d in enumerate(data["data"])])
+            "".join(
+                ["{}. {}\n".format(i, d) for i, d in enumerate(data["data"])]
+            ).strip()
         )
 
         return reply_message
 
     def delete_data(self, user_id: str, message: str):
-        # TODO: delete using index
 
         reply_message = []
 
         # remove keyword
-        message = message.replace("delete", "").strip()
+        insensitive_delete = re.compile(re.escape('delete'), re.IGNORECASE)
+        message = insensitive_delete.sub('', message).strip()
 
         # remove by index or text
         if message.isdigit():

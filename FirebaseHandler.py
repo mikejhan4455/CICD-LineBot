@@ -53,4 +53,5 @@ class FirebaseHandler:
 
         elif data in user_data["data"]:
             user_data["data"].remove(data)
+            self.fb.put(self.firebase_url, name="users", data=user_data)
             return True
