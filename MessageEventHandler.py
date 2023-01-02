@@ -49,7 +49,8 @@ class MessageEventHandler:
 
         else:
             reply_message.append(
-                "清單：\n" + "".join(
+                "清單：\n"
+                + "".join(
                     ["{}. {}\n".format(i, d) for i, d in enumerate(data["data"])]
                 ).strip()
             )
@@ -57,6 +58,21 @@ class MessageEventHandler:
         return reply_message
 
     def delete_data(self, user_id: str, message: str):
+        """Delete data from user datbase
+        now support format:  and keyword+index
+        Example:
+            1. keyword+word: delete 資料
+            2. keyword+index: delete 3
+
+        # TODO: Delete data without keyword
+
+        Args:
+            user_id (str): _description_
+            message (str): _description_
+
+        Returns:
+            reply_message (list): reply messages
+        """
 
         reply_message = []
 
@@ -64,17 +80,19 @@ class MessageEventHandler:
         insensitive_delete = re.compile(re.escape("delete"), re.IGNORECASE)
         message = insensitive_delete.sub("", message).strip()
 
-        # remove by index or text
-        if message.isdigit():
-            # remove by index
-            index = int(message)
-            # BUG: Delete index out of range
-            message = self.firebase_handler.read(user_id)["data"][index]
-            result = self.firebase_handler.delete(user_id, message)
+        user_data = self.firebase_handler.read(user_id)["data"]
 
-        else:
-            # remove by text
-            result = self.firebase_handler.delete(user_id, message)
+        # if index is given, transform to text data
+        if message.isdigit():
+            index = int(message)
+
+            if index < len(user_data):
+
+                # change index to data
+                message = self.firebase_handler.read(user_id)["data"][index]
+
+        # remove by text
+        result = self.firebase_handler.delete(user_id, message)
 
         if result:
             reply_message.append("已經刪除: {}".format(message))
