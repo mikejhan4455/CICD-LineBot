@@ -10,8 +10,8 @@ class MessageEventHandler:
 
     def __call__(self, event):
 
-        message = event.message.text
-        user_id = event.source.user_id
+        message: str = event.message.text
+        user_id: str = event.source.user_id
 
         user_data = self.get_user_data(user_id)
 
@@ -24,7 +24,11 @@ class MessageEventHandler:
             return self.list_data(user_id)
 
         # Delete format: with keyword or without keyword
-        if re.match("delete", message, re.IGNORECASE) or bool(message in user_data):
+        if (
+            re.match("delete", message, re.IGNORECASE)
+            or bool(message in user_data)
+            or message.isdigit()
+        ):
 
             return self.delete_data(user_id, message, user_data)
 
@@ -107,7 +111,7 @@ class MessageEventHandler:
         self.firebase_handler.write(user_id, message)
 
         # reply success
-        reply_message.append("已記住 {message}")
+        reply_message.append(f"已記住 {message}")
 
         # reply current database
         reply_message.extend(self.list_data(user_id))
