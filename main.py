@@ -42,16 +42,17 @@ def callback(request):
     signature_from_requests = request.headers["X-Line-Signature"]
     print(f"request.json: {request.json}")
 
-    # Compare x-line-signature request header and the signature
-    body = request.json
-    hash_value = hmac.new(
-        channel_secret.encode("utf-8"), str(body).encode("utf-8"), hashlib.sha256
-    ).digest()
+    # # Compare x-line-signature request header and the signature
+    # TODO: WIP
+    # body = request.json
+    # hash_value = hmac.new(
+    #     channel_secret.encode("utf-8"), str(body).encode("utf-8"), hashlib.sha256
+    # ).digest()
 
-    signature_from_requests = base64.b64encode(hash_value)
+    # signature_from_requests = base64.b64encode(hash_value)
 
-    if signature_from_requests != hash_value:
-        raise InvalidSignatureError
+    # if signature_from_requests != hash_value:
+    #     raise InvalidSignatureError
 
     # get request body as text
     body = request.get_data(as_text=True)
