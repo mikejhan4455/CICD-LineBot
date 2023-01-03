@@ -19,7 +19,7 @@ from MessageEventHandler import MessageEventHandler
 dotenv.load_dotenv(".env.yaml")
 line_bot_api = LineBotApi(os.getenv("CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.getenv("CHANNEL_SECRET"))
-message_reply_handler = MessageEventHandler()
+message_event_handler = MessageEventHandler()
 
 
 @functions_framework.http
@@ -40,22 +40,18 @@ def callback(request):
 
     # get X-Line-Signature header value
     signature_from_requests = request.headers["X-Line-Signature"]
-    print(request.json)
+    print(f"request.json: {request.json}")
 
-    #  # Compare x-line-signature request header and the signature
-    #  # TODO: Under development
-    # body = request.json
-    # hash_value = hmac.new(
-    #     channel_secret.encode("utf-8"), body.encode("utf-8"), hashlib.sha256
-    # ).digest()
-    # signature_from_requests = base64.b64encode(hash_value)
-    # print("signature_from_requests: {}".format(signature_from_requests))
-    # print("signature_from_hash: {}".format(hash_value))
+    # Compare x-line-signature request header and the signature
+    body = request.json
+    hash_value = hmac.new(
+        channel_secret.encode("utf-8"), str(body).encode("utf-8"), hashlib.sha256
+    ).digest()
 
-    # if signature_from_requests != hash_value:
-    #     raise Exception
-    # else:
-    #     print("signature is the same")
+    signature_from_requests = base64.b64encode(hash_value)
+
+    if signature_from_requests != hash_value:
+        raise InvalidSignatureError
 
     # get request body as text
     body = request.get_data(as_text=True)
@@ -72,8 +68,10 @@ def callback(request):
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
     """Handle All TextMessage from requesets of LINE."""
+    print(f"type(event): {type(event)}")
+    print(f"event: {event}")
 
-    reply_messages = message_reply_handler(event)
+    reply_messages = message_event_handler(event)
 
     line_bot_api.reply_message(
         event.reply_token, [TextSendMessage(text=message) for message in reply_messages]
