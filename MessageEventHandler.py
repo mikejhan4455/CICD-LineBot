@@ -13,9 +13,7 @@ class MessageEventHandler:
         message = event.message.text
         user_id = event.source.user_id
 
-        # get user_data
-        user_data: dict | None = self.firebase_handler.read(user_id)  # type: ignore
-        user_data: list = user_data["data"] if user_data else []  # type: ignore
+        user_data = self.get_user_data(user_id)
 
         # message route
         if message == "date":
@@ -23,8 +21,9 @@ class MessageEventHandler:
 
         if re.match("list", message, re.IGNORECASE):
 
-            return self.list_data(user_id, user_data)
+            return self.list_data(user_id)
 
+        # Delete format: with keyword or without keyword
         if re.match("delete", message, re.IGNORECASE) or bool(message in user_data):
 
             return self.delete_data(user_id, message, user_data)
@@ -39,14 +38,17 @@ class MessageEventHandler:
     def date(self):
         reply_message = []
         dt = datetime.utcnow().replace(tzinfo=timezone.utc)
-        dt.astimezone(timezone(timedelta(hours=8)))  # 轉換時區 -> 東八區
+        dt.astimezone(timezone(timedelta(hours=8)))  # UTC+8
 
         reply_message.append(dt.today().strftime("%Y-%m-%d"))
 
         return reply_message
 
-    def list_data(self, user_id: str, user_data: list):
+    def list_data(self, user_id: str):
         reply_message = []
+
+        # update user_data
+        user_data = self.get_user_data(user_id)
 
         if not user_data:
             reply_message.append("目前沒有資料噢")
@@ -65,8 +67,7 @@ class MessageEventHandler:
         Example:
             1. keyword+word: delete 資料
             2. keyword+index: delete 3
-
-        # TODO: Delete data without keyword
+            3. without keyword: If message already in user_data
 
         Args:
             user_id (str): event.source.user_id
@@ -82,7 +83,7 @@ class MessageEventHandler:
         insensitive_delete = re.compile(re.escape("delete"), re.IGNORECASE)
         message = insensitive_delete.sub("", message).strip()
 
-        # if index is given, transform to text data
+        # if index is given, transform to text
         if message.isdigit():
             index = int(message)
 
@@ -97,7 +98,7 @@ class MessageEventHandler:
         else:
             reply_message.append(f"沒有 {message} 的記錄")
 
-        reply_message.extend(self.list_data(user_id, user_data))
+        reply_message.extend(self.list_data(user_id))
 
         return reply_message
 
@@ -109,13 +110,12 @@ class MessageEventHandler:
         reply_message.append("已記住 {message}")
 
         # reply current database
-        reply_message.extend(self.list_data(user_id, user_data))
+        reply_message.extend(self.list_data(user_id))
 
         return reply_message
 
     def remind_data(self, user_id: str, message: str):
         # TODO：WIP
-
         reply_message = []
 
         return reply_message
@@ -125,3 +125,9 @@ class MessageEventHandler:
         reply_message = []
 
         return reply_message
+
+    def get_user_data(self, user_id) -> list:
+        user_data: dict | None = self.firebase_handler.read(user_id)  # type: ignore
+        user_data: list = user_data["data"] if user_data else []  # type: ignore
+
+        return user_data
