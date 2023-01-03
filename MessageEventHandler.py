@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import re
+from typing import Any
 from FirebaseHandler import FirebaseHandler
 
 
@@ -12,24 +13,28 @@ class MessageEventHandler:
         message = event.message.text
         user_id = event.source.user_id
 
+        # get user_data
+        user_data: dict | None = self.firebase_handler.read(user_id)  # type: ignore
+        user_data: list = user_data["data"] if user_data else []  # type: ignore
+
         # message route
         if message == "date":
             return self.date()
 
         if re.match("list", message, re.IGNORECASE):
 
-            return self.list_data(user_id)
+            return self.list_data(user_id, user_data)
 
-        if re.match("delete", message, re.IGNORECASE):
+        if re.match("delete", message, re.IGNORECASE) or bool(message in user_data):
 
-            return self.delete_data(user_id, message)
+            return self.delete_data(user_id, message, user_data)
 
         if re.match("remind", message, re.IGNORECASE):
 
             return self.remind_data(user_id, message)
 
         # 其他一律存入 database
-        return self.remember_data(user_id, message)
+        return self.remember_data(user_id, message, user_data)
 
     def date(self):
         reply_message = []
@@ -40,24 +45,21 @@ class MessageEventHandler:
 
         return reply_message
 
-    def list_data(self, user_id: str):
+    def list_data(self, user_id: str, user_data: list):
         reply_message = []
-        data = self.firebase_handler.read(user_id)
 
-        if not data:
+        if not user_data:
             reply_message.append("目前沒有資料噢")
 
         else:
             reply_message.append(
                 "清單：\n"
-                + "".join(
-                    ["{}. {}\n".format(i, d) for i, d in enumerate(data["data"])]
-                ).strip()
+                + "".join([f"{i}. {d}\n" for i, d in enumerate(user_data)]).strip()
             )
 
         return reply_message
 
-    def delete_data(self, user_id: str, message: str):
+    def delete_data(self, user_id: str, message: str, user_data: list):
         """Delete data from user datbase
         now support format:  and keyword+index
         Example:
@@ -67,8 +69,8 @@ class MessageEventHandler:
         # TODO: Delete data without keyword
 
         Args:
-            user_id (str): _description_
-            message (str): _description_
+            user_id (str): event.source.user_id
+            message (str): event.message.text
 
         Returns:
             reply_message (list): reply messages
@@ -80,38 +82,34 @@ class MessageEventHandler:
         insensitive_delete = re.compile(re.escape("delete"), re.IGNORECASE)
         message = insensitive_delete.sub("", message).strip()
 
-        user_data = self.firebase_handler.read(user_id)["data"]
-
         # if index is given, transform to text data
         if message.isdigit():
             index = int(message)
 
-            if index < len(user_data):
-
-                # change index to data
-                message = self.firebase_handler.read(user_id)["data"][index]
+            # change index to text
+            message = user_data[index] if index < len(user_data) else message
 
         # remove by text
         result = self.firebase_handler.delete(user_id, message)
 
         if result:
-            reply_message.append("已經刪除: {}".format(message))
+            reply_message.append(f"已經刪除: {message}")
         else:
-            reply_message.append("沒有 {} 的記錄".format(message))
+            reply_message.append(f"沒有 {message} 的記錄")
 
-        reply_message.extend(self.list_data(user_id))
+        reply_message.extend(self.list_data(user_id, user_data))
 
         return reply_message
 
-    def remember_data(self, user_id, message):
+    def remember_data(self, user_id, message, user_data):
         reply_message = []
         self.firebase_handler.write(user_id, message)
 
         # reply success
-        reply_message.append("已記住 {}".format(message))
+        reply_message.append("已記住 {message}")
 
         # reply current database
-        reply_message.extend(self.list_data(user_id))
+        reply_message.extend(self.list_data(user_id, user_data))
 
         return reply_message
 
@@ -122,7 +120,7 @@ class MessageEventHandler:
 
         return reply_message
 
-    def search_dat(self, user_id: str, message: str):
+    def search_data(self, user_id: str, message: str):
         # TODO: WIP
         reply_message = []
 
