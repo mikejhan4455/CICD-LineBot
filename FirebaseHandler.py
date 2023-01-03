@@ -1,5 +1,6 @@
 import os
 from firebase import firebase
+import dotenv
 
 
 class FirebaseHandler:
@@ -10,6 +11,7 @@ class FirebaseHandler:
             self.firebase_url = firebase_url
         else:
             # get firebase_url from environment variables
+            dotenv.load_dotenv(".env.yaml")
             self.firebase_url = os.getenv("FIREBASE_URL") or ""
 
         # Exception handler
