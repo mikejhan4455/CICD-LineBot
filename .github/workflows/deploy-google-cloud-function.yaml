@@ -44,7 +44,7 @@ jobs:
         --entry-point=callback
         --gen2
         --max-instances=1
-        --memory=128Mi
+        --memory=256Mi
         --no-user-output-enabled
         --region=us-central1
         --runtime=python310
