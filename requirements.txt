@@ -1,6 +1,5 @@
 aiohttp==3.8.3
 aiosignal==1.3.1
-APScheduler==3.9.1.post1
 astroid==2.12.13
 async-timeout==4.0.2
 attrs==22.1.0
@@ -10,7 +9,6 @@ cachetools==5.2.0
 certifi==2022.12.7
 cffi==1.15.1
 charset-normalizer==2.1.1
--e git+https://github.com/mikejhan4455/CICD-LineBot.git@1a8144d673d1a575bb5ae90cf1ec8a3af54446a2#egg=cicd_linebot
 click==8.1.3
 cloudevents==1.8.0
 cryptography==38.0.4
