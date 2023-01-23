@@ -16,7 +16,6 @@ class MessageEventHandler:
         user_data = self.get_user_data(user_id)
 
         # message route
-
         if re.match("list", message, re.IGNORECASE):
 
             return self.list_data(user_id)
@@ -33,6 +32,10 @@ class MessageEventHandler:
         if re.match("search", message, re.IGNORECASE):
 
             return self.search_data(user_id, message)
+
+        # access function table test
+        if re.match("fuction", message, re.IGNORECASE):
+            return self.add_functions(user_id, message)
 
         # 其他一律存入 database
         return self.remember_data(user_id, message, user_data)
@@ -155,6 +158,21 @@ class MessageEventHandler:
             for data in user_data:
                 if re.match(search_data, data, re.IGNORECASE):
                     reply_message.append(data)
+
+        return reply_message
+
+    def add_functions(self, user_id: str, message: str):
+        reply_message = []
+        data = message.split()
+
+        self.firebase_handler.add_user_funcs_map(user_id, data)
+
+        # reply success
+        for d in data:
+            reply_message.append(f"已記住 {message}")
+
+        # reply current database
+        reply_message.extend(self.list_data(user_id))
 
         return reply_message
 

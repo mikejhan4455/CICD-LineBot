@@ -25,7 +25,7 @@ class FirebaseHandler:
             )
 
         # Auth Step
-        self.fire_base_cert: = {
+        self.fire_base_cert = {
             "type": os.getenv("FIRE_BASE_CERT_TYPE"),
             "project_id": os.getenv("FIRE_BASE_CERT_PROJECT_ID"),
             "private_key_id": os.getenv("FIRE_BASE_CERT_PRIVATE_KEY_ID"),
