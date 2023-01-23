@@ -29,7 +29,9 @@ class FirebaseHandler:
             "type": os.getenv("FIRE_BASE_CERT_TYPE"),
             "project_id": os.getenv("FIRE_BASE_CERT_PROJECT_ID"),
             "private_key_id": os.getenv("FIRE_BASE_CERT_PRIVATE_KEY_ID"),
-            "private_key": os.getenv("FIRE_BASE_CERT_PRIVATE_KEY"),
+            "private_key": bytes(
+                os.getenv("FIRE_BASE_CERT_PRIVATE_KEY"), "utf-8"
+            ).decode("unicode_escape"),
             "client_email": os.getenv("FIRE_BASE_CERT_CLIENT_EMAIL"),
             "client_id": os.getenv("FIRE_BASE_CERT_CLIENT_ID"),
             "auth_uri": os.getenv("FIRE_BASE_CERT_AUTH_URI"),
@@ -231,6 +233,10 @@ def test():
     # print(fh.read_user_funcs_map(user_id))
 
     fh.remove_user_data(user_id, [])
+
+
+def test_cert():
+    pass
 
 
 if __name__ == "__main__":
