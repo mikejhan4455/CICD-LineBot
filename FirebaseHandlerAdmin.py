@@ -166,11 +166,14 @@ class FirebaseHandler:
         if not minutes:
             minutes = [i for i in range(4)]
 
-        # turn hours minutes to list if not
+        # turn hours minutes funcs to list if not
         if not isinstance(hours, list):
             hours = [hours]
         if not isinstance(minutes, list):
             minutes = [minutes]
+        if not isinstance(funcs, list):
+            funcs = [funcs]
+
 
         funcs_map = self.read_user_funcs_map(user_id)
 
