@@ -25,6 +25,16 @@ jobs:
         echo "CHANNEL_ID: ${{ secrets.CHANNEL_ID }}" >> .env.yaml
         echo "PERSONAL_USERID: ${{ secrets.PERSONAL_USERID }}" >> .env.yaml
         echo "FIREBASE_URL: ${{ secrets.FIREBASE_URL }}" >> .env.yaml
+        echo "FIRE_BASE_CERT_TYPE: ${{ secrets.FIRE_BASE_CERT_TYPE }}" >> .env.yaml
+        echo "FIRE_BASE_CERT_PROJECT_ID: ${{ secrets.FIRE_BASE_CERT_PROJECT_ID }}" >> .env.yaml
+        echo "FIRE_BASE_CERT_PRIVATE_KEY_ID: ${{ secrets.FIRE_BASE_CERT_PRIVATE_KEY_ID }}" >> .env.yaml
+        echo "FIRE_BASE_CERT_PRIVATE_KEY: ${{ secrets.FIRE_BASE_CERT_PRIVATE_KEY }}" >> .env.yaml
+        echo "FIRE_BASE_CERT_CLIENT_EMAIL: ${{ secrets.FIRE_BASE_CERT_CLIENT_EMAIL }}" >> .env.yaml
+        echo "FIRE_BASE_CERT_CLIENT_ID: ${{ secrets.FIRE_BASE_CERT_CLIENT_ID }}" >> .env.yaml
+        echo "FIRE_BASE_CERT_AUTH_URI: ${{ secrets.FIRE_BASE_CERT_AUTH_URI }}" >> .env.yaml
+        echo "FIRE_BASE_CERT_TOKEN_URI: ${{ secrets.FIRE_BASE_CERT_TOKEN_URI }}" >> .env.yaml
+        echo "FIRE_BASE_CERT_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.FIRE_BASE_CERT_AUTH_PROVIDER_X509_CERT_URL }}" >> .env.yaml
+        echo "FIRE_BASE_CERT_CLIENT_X509_CERT_URL: ${{ secrets.FIRE_BASE_CERT_CLIENT_X509_CERT_URL }}" >> .env.yaml
 
     - id: deploy-using-api
       name: Deploy to GCF
