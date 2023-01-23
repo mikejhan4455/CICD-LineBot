@@ -157,8 +157,8 @@ class FirebaseHandler:
         self,
         user_id,
         funcs: list,
-        hours: Optional[list] = None,
-        minutes: Optional[list] = None,
+        hours=None,
+        minutes=None,
     ):
 
         if not hours:

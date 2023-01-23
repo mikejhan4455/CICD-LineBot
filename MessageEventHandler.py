@@ -34,7 +34,7 @@ class MessageEventHandler:
             return self.search_data(user_id, message)
 
         # access function table test
-        if re.match("fuction", message, re.IGNORECASE):
+        if re.match("function", message, re.IGNORECASE):
             return self.add_functions(user_id, message)
 
         # 其他一律存入 database
@@ -137,6 +137,8 @@ class MessageEventHandler:
         message = insensitive_search.sub("", message).strip()
         message = message.split()
 
+        print(message)
+
         if not user_data:
             reply_message.append("目前沒有資料噢")
 
@@ -169,6 +171,7 @@ class MessageEventHandler:
         message = insensitive_function.sub("", message).strip()
         data = message.split()
 
+        print(message)
         print(data)
 
         funcs = data[0] if 0 < len(data) else "MyDefaultFunc()"
