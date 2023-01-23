@@ -169,7 +169,7 @@ class MessageEventHandler:
         message = insensitive_function.sub("", message).strip()
         data = message.split()
 
-        funcs = data[0] if 0 < len(l) else "MyDefaultFunc()"
+        funcs = data[0] if 0 < len(data) else "MyDefaultFunc()"
         hours = data[1] if 1 < len(data) else None
         minutes = data[2] if 2 < len(data) else None
 
