@@ -25,19 +25,19 @@ class FirebaseHandler:
             )
 
         # Auth Step
-        self.fire_base_cert = {
-            "type": os.getenv("fire_base_cert_type"),
-            "project_id": os.getenv("fire_base_cert_project_id"),
-            "private_key_id": os.getenv("fire_base_cert_private_key_id"),
-            "private_key": os.getenv("fire_base_cert_private_key"),
-            "client_email": os.getenv("fire_base_cert_client_email"),
-            "client_id": os.getenv("fire_base_cert_client_id"),
-            "auth_uri": os.getenv("fire_base_cert_auth_uri"),
-            "token_uri": os.getenv("fire_base_cert_token_uri"),
+        self.fire_base_cert: = {
+            "type": os.getenv("FIRE_BASE_CERT_TYPE"),
+            "project_id": os.getenv("FIRE_BASE_CERT_PROJECT_ID"),
+            "private_key_id": os.getenv("FIRE_BASE_CERT_PRIVATE_KEY_ID"),
+            "private_key": os.getenv("FIRE_BASE_CERT_PRIVATE_KEY"),
+            "client_email": os.getenv("FIRE_BASE_CERT_CLIENT_EMAIL"),
+            "client_id": os.getenv("FIRE_BASE_CERT_CLIENT_ID"),
+            "auth_uri": os.getenv("FIRE_BASE_CERT_AUTH_URI"),
+            "token_uri": os.getenv("FIRE_BASE_CERT_TOKEN_URI"),
             "auth_provider_x509_cert_url": os.getenv(
-                "fire_base_cert_auth_provider_x509_cert_url"
+                "FIRE_BASE_CERT_AUTH_PROVIDER_X509_CERT_URL"
             ),
-            "client_x509_cert_url": os.getenv("fire_base_cert_client_x509_cert_url"),
+            "client_x509_cert_url": os.getenv("FIRE_BASE_CERT_CLIENT_X509_CERT_URL"),
         }
 
         # Fetch the service account key JSON file contents
@@ -212,3 +212,27 @@ class FirebaseHandler:
 
         self.__write(user_id, "func", funcs_map)
 
+
+def test():
+    fh = FirebaseHandler()
+    user_id = "00000"
+
+    # fh.create_user_funcs_map(user_id)
+
+    # data
+    # fh.add_user_data(user_id, ['1', '2', '3', '4'])
+    # print(fh.read_user_data(user_id))
+
+    # # function
+    # fh.add_user_funcs_map(user_id, ['1', '2', '3', '4'])
+    # print(fh.read_user_funcs_map(user_id))
+
+    # fh.remove_user_funcs_map(user_id, [])
+    # print(fh.read_user_funcs_map(user_id))
+
+    fh.remove_user_data(user_id, [])
+
+
+if __name__ == "__main__":
+
+    test()
