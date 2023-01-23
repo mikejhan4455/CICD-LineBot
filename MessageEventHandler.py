@@ -163,13 +163,22 @@ class MessageEventHandler:
 
     def add_functions(self, user_id: str, message: str):
         reply_message = []
+
+        # remove keyword
+        insensitive_function = re.compile(re.escape("function"), re.IGNORECASE)
+        message = insensitive_function.sub("", message).strip()
         data = message.split()
 
-        self.firebase_handler.add_user_funcs_map(user_id, data)
+        funcs = data[0] if 0 < len(l) else "MyDefaultFunc()"
+        hours = data[1] if 1 < len(data) else None
+        minutes = data[2] if 2 < len(data) else None
+
+        self.firebase_handler.add_user_funcs_map(
+            user_id, funcs=funcs, hours=hours, minutes=minutes
+        )
 
         # reply success
-        for d in data:
-            reply_message.append(f"已記住 {message}")
+        reply_message.append(f"已記住 {message}")
 
         # reply current database
         reply_message.extend(self.list_data(user_id))
@@ -178,6 +187,6 @@ class MessageEventHandler:
 
     def get_user_data(self, user_id) -> list:
         user_data: dict | None = self.firebase_handler.read_user_data(user_id)  # type: ignore
-        user_data: list = user_data["data"] if user_data else []  # type: ignore
+        user_data: list = user_data if user_data else []  # type: ignore
 
         return user_data
